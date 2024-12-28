@@ -8,14 +8,13 @@ type Repository interface {
 
 	Register(req models.RegisterRequest) (models.UserProfile, error)
 	SignIn(req models.SignInRequest) (models.TokenClaims, error)
+	AddToken(id int, token string) error
+	ValidateToken(token string) error
+	KillTokens(id int) error
 
 	GetProfile(id int) (models.UserProfile, error)
 	UpdateProfile(id int, req models.UpdateProfileRequest) (models.UserProfile, error)
 	UpdatePassword(id int, req models.UpdatePasswordRequest) error
-
-	AddToken(id int, token string) error
-	ValidateToken(token string) error
-	KillTokens(id int) error
 
 	AddFriend(id int, login string) error
 	RemoveFriend(id int, login string) error

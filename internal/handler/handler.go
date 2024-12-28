@@ -13,6 +13,7 @@ type Service interface {
 
 	Register(req models.RegisterRequest) (models.UserProfile, error)
 	SignIn(req models.SignInRequest) (string, error)
+	ValidateToken(token string) error
 
 	GetProfile(id int) (models.UserProfile, error)
 	UpdateProfile(id int, req models.UpdateProfileRequest) (models.UserProfile, error)
@@ -21,8 +22,6 @@ type Service interface {
 	AddFriend(id int, login string) error
 	RemoveFriend(id int, login string) error
 	ListFriends(id int, limit int, offset int) ([]models.FriendInfo, error)
-
-	ValidateToken(token string) error
 }
 
 type Handler struct {

@@ -1,4 +1,4 @@
-package pulsenetwork
+package pulseapi
 
 import (
 	"context"

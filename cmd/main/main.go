@@ -11,7 +11,7 @@ import (
 	_ "github.com/lib/pq"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
-	pulsenetwork "github.com/ursulgwopp/pulse-api"
+	pulseapi "github.com/ursulgwopp/pulse-api"
 	"github.com/ursulgwopp/pulse-api/configs"
 	"github.com/ursulgwopp/pulse-api/internal/handler"
 	"github.com/ursulgwopp/pulse-api/internal/repository"
@@ -45,7 +45,7 @@ func main() {
 	service := service.NewService(repo)
 	handler := handler.NewTransport(service)
 
-	srv := &pulsenetwork.Server{}
+	srv := &pulseapi.Server{}
 	go func() {
 		if err := srv.Run(viper.GetString("port"), handler.InitRoutes()); err != nil && err != http.ErrServerClosed {
 			logrus.Fatalf("error running http server: %s", err.Error())
