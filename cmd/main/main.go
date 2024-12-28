@@ -45,6 +45,8 @@ func main() {
 	service := service.NewService(repo)
 	handler := handler.NewTransport(service)
 
+	//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MzU0ODc5MTMsImlhdCI6MTczNTQwMTUxMywiVXNlcklkIjoxfQ.5ajF4kxB3NjVT_KWOemW9wU7ixnx-o2gcxAB7C6yBk8
+
 	srv := &pulseapi.Server{}
 	go func() {
 		if err := srv.Run(viper.GetString("port"), handler.InitRoutes()); err != nil && err != http.ErrServerClosed {

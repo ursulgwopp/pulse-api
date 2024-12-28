@@ -41,6 +41,32 @@ func (r *PostgresRepository) CheckPhoneExists(phone string) (bool, error) {
 	return exists, nil
 }
 
+func (r *PostgresRepository) CheckUserIdByLogin(login string) (int, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), operationTimeout)
+	defer cancel()
+
+	var id int
+	query := `SELECT id FROM users WHERE login = $1`
+	if err := r.db.QueryRowContext(ctx, query, login).Scan(&id); err != nil {
+		return -1, err
+	}
+
+	return id, nil
+}
+
+func (r *PostgresRepository) CheckLoginByUserId(id int) (string, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), operationTimeout)
+	defer cancel()
+
+	var login string
+	query := `SELECT login FROM users WHERE id = $1`
+	if err := r.db.QueryRowContext(ctx, query, id).Scan(&login); err != nil {
+		return "", err
+	}
+
+	return login, nil
+}
+
 // func (r *PostgresRepository) CheckUserIdExists(id int) (bool, error) {
 // 	ctx, cancel := context.WithTimeout(context.Background(), operationTimeout)
 // 	defer cancel()

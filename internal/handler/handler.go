@@ -18,6 +18,7 @@ type Service interface {
 	GetProfile(id int) (models.UserProfile, error)
 	UpdateProfile(id int, req models.UpdateProfileRequest) (models.UserProfile, error)
 	UpdatePassword(id int, req models.UpdatePasswordRequest) error
+	GetProfileByLogin(id int, login string) (models.UserProfile, error)
 
 	AddFriend(id int, login string) error
 	RemoveFriend(id int, login string) error
@@ -51,9 +52,13 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		api.PATCH("/me/profile", h.userIdentity, h.updateProfile)
 		api.POST("/me/updatePassword", h.userIdentity, h.updatePassword)
 
+		api.GET("/profiles/:login", h.userIdentity, h.getProfileByLogin)
+
 		api.POST("/friends/add", h.userIdentity, h.addFriend)
 		api.POST("/friends/remove", h.userIdentity, h.removeFriend)
 		api.GET("/friends", h.userIdentity, h.listFriends)
+
+		// api.POST("")
 	}
 
 	return router

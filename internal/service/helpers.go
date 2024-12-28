@@ -8,11 +8,22 @@ import (
 	"slices"
 
 	"github.com/ursulgwopp/pulse-api/internal/errors"
+	"github.com/ursulgwopp/pulse-api/internal/models"
 )
 
 func isValidRegion(region string) bool {
 	validRegions := []string{"Asia", "Oceania", "Europe", "Africa", "Americas"}
 	return slices.Contains(validRegions, region)
+}
+
+func isFriend(friends []models.FriendInfo, login string) bool {
+	for _, friend := range friends {
+		if friend.Login == login {
+			return true
+		}
+	}
+
+	return false
 }
 
 func generatePasswordHash(password string) string {

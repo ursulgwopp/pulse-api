@@ -23,6 +23,8 @@ type Repository interface {
 	CheckLoginExists(login string) (bool, error)
 	CheckCountryCodeExists(alpha2 string) (bool, error)
 	CheckPhoneExists(phone string) (bool, error)
+	CheckUserIdByLogin(login string) (int, error)
+	CheckLoginByUserId(id int) (string, error)
 	// CheckUserIdExists(id int) (bool, error)
 }
 

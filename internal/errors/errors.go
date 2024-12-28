@@ -26,4 +26,6 @@ var (
 	ErrUserIdNotFound       = errors.New("user id not found")
 	ErrInvalidIdType        = errors.New("invalid id type")
 	ErrInvalidToken         = errors.New("invalid token")
+
+	ErrAccessDenied = errors.New("access denied")
 )
