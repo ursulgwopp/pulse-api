@@ -29,6 +29,8 @@ var (
 
 	ErrInvalidTag     = errors.New("invalid tag")
 	ErrInvalidContent = errors.New("invalid content")
+	ErrPostIdNotFound = errors.New("post id not found")
 
-	ErrAccessDenied = errors.New("access denied")
+	ErrAccessDenied            = errors.New("access denied")
+	ErrInvalidPaginationParams = errors.New("invalid pagination params")
 )

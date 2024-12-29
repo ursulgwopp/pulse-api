@@ -15,7 +15,7 @@ func (h *Handler) getProfile(c *gin.Context) {
 		return
 	}
 
-	userProfile, err := h.service.GetProfile(login)
+	userProfile, err := h.service.GetMyProfile(login)
 	if err != nil {
 		models.NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return

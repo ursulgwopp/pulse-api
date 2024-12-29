@@ -1,6 +1,10 @@
 package repository
 
-import "context"
+import (
+	"context"
+
+	"github.com/google/uuid"
+)
 
 func (r *PostgresRepository) CheckLoginExists(login string) (bool, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), operationTimeout)
@@ -65,6 +69,32 @@ func (r *PostgresRepository) CheckLoginByUserId(id int) (string, error) {
 	}
 
 	return login, nil
+}
+
+func (r *PostgresRepository) CheckProfileIsPublic(login string) (bool, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), operationTimeout)
+	defer cancel()
+
+	var is_public bool
+	query := `SELECT is_public FROM users WHERE login = $1`
+	if err := r.db.QueryRowContext(ctx, query, login).Scan(&is_public); err != nil {
+		return false, err
+	}
+
+	return is_public, nil
+}
+
+func (r *PostgresRepository) CheckPostIdExists(id uuid.UUID) (bool, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), operationTimeout)
+	defer cancel()
+
+	var exists bool
+	query := `SELECT EXISTS (SELECT 1 FROM posts WHERE id = $1)`
+	if err := r.db.QueryRowContext(ctx, query, id).Scan(&exists); err != nil {
+		return false, err
+	}
+
+	return exists, nil
 }
 
 // func (r *PostgresRepository) CheckUserIdExists(id int) (bool, error) {

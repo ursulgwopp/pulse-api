@@ -30,7 +30,7 @@ CREATE TABLE friends (
 CREATE TABLE posts (
   id UUID PRIMARY KEY NOT NULL,
   content TEXT NOT NULL,
-  author TEXT NOT NULL,
+  author TEXT NOT NULL REFERENCES users(login),
   tags TEXT[] DEFAULT '{}',
   created_at TIMESTAMP DEFAULT NOW(),
   likes_count INTEGER[] DEFAULT '{}',

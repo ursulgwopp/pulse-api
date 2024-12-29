@@ -85,6 +85,11 @@ func (h *Handler) listFriends(c *gin.Context) {
 
 	friends, err := h.service.ListFriends(login, limit, offset)
 	if err != nil {
+		if err == errors.ErrInvalidPaginationParams {
+			models.NewErrorResponse(c, http.StatusBadRequest, err.Error())
+			return
+		}
+
 		models.NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}

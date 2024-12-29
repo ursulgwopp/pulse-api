@@ -1,6 +1,9 @@
 package service
 
-import "github.com/ursulgwopp/pulse-api/internal/models"
+import (
+	"github.com/google/uuid"
+	"github.com/ursulgwopp/pulse-api/internal/models"
+)
 
 type Repository interface {
 	ListCountries(regions []string) ([]models.Country, error)
@@ -21,12 +24,16 @@ type Repository interface {
 	ListFriends(login string, limit int, offset int) ([]models.FriendInfo, error)
 
 	NewPost(login string, req models.NewPostRequest) (models.Post, error)
+	GetPost(postId uuid.UUID) (models.Post, error)
+	ListPosts(login string, limit int, offset int) ([]models.Post, error)
 
 	CheckLoginExists(login string) (bool, error)
 	CheckCountryCodeExists(alpha2 string) (bool, error)
 	CheckPhoneExists(phone string) (bool, error)
-	CheckUserIdByLogin(login string) (int, error)
-	CheckLoginByUserId(id int) (string, error)
+	// CheckUserIdByLogin(login string) (int, error)
+	// CheckLoginByUserId(id int) (string, error)
+	CheckProfileIsPublic(login string) (bool, error)
+	CheckPostIdExists(id uuid.UUID) (bool, error)
 	// CheckUserIdExists(id int) (bool, error)
 }
 

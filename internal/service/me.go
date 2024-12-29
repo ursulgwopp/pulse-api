@@ -5,7 +5,7 @@ import (
 	"github.com/ursulgwopp/pulse-api/internal/models"
 )
 
-func (s *Service) GetProfile(login string) (models.UserProfile, error) {
+func (s *Service) GetMyProfile(login string) (models.UserProfile, error) {
 	return s.repo.GetProfile(login)
 }
 

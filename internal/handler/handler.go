@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/ursulgwopp/pulse-api/internal/models"
 )
 
@@ -15,7 +16,7 @@ type Service interface {
 	SignIn(req models.SignInRequest) (string, error)
 	ValidateToken(token string) error
 
-	GetProfile(login string) (models.UserProfile, error)
+	GetMyProfile(login string) (models.UserProfile, error)
 	UpdateProfile(login string, req models.UpdateProfileRequest) (models.UserProfile, error)
 	UpdatePassword(login string, req models.UpdatePasswordRequest) error
 	GetProfileByLogin(userLogin string, profileLogin string) (models.UserProfile, error)
@@ -24,7 +25,10 @@ type Service interface {
 	RemoveFriend(userLogin string, login string) error
 	ListFriends(login string, limit int, offset int) ([]models.FriendInfo, error)
 
-	NewPost(id int, req models.NewPostRequest) (models.Post, error)
+	NewPost(login string, req models.NewPostRequest) (models.Post, error)
+	GetPost(login string, postId uuid.UUID) (models.Post, error)
+	ListMyPosts(login string, limit int, offset int) ([]models.Post, error)
+	ListPosts(userLogin string, login string, limit int, offset int) ([]models.Post, error)
 }
 
 type Handler struct {
@@ -61,6 +65,9 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		api.GET("/friends", h.userIdentity, h.listFriends)
 
 		api.POST("/posts/new", h.userIdentity, h.newPost)
+		api.GET("/posts/:postId", h.userIdentity, h.getPost)
+		api.GET("/posts/feed/my", h.userIdentity, h.listMyPosts)
+		api.GET("/posts/feed/:login", h.userIdentity, h.listPosts)
 	}
 
 	return router
