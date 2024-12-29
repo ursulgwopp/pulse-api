@@ -2,7 +2,7 @@
 
 Welcome to **Pulse**, a dynamic social network where users can create their own blogs, write engaging posts on a variety of topics, and share their thoughts with the world.
 
-This application was developed as part of the technical challenge for the **PROD '23** contest. For more details, you can find the task description and the OpenAPI specification in the `docs` directory.
+This application was developed as part of the technical challenge for the PROD '23 contest. For more details, you can find the task description and the OpenAPI specification in the `docs` directory.
 
 ## Topics covered
 
