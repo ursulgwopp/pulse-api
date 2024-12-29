@@ -119,3 +119,87 @@ func (s *Service) ListPosts(userLogin string, login string, limit int, offset in
 
 	return []models.Post{}, errors.ErrAccessDenied
 }
+
+func (s *Service) LikePost(login string, postId uuid.UUID) (models.Post, error) {
+	// id exists
+	exists, err := s.repo.CheckPostIdExists(postId)
+	if err != nil {
+		return models.Post{}, err
+	}
+
+	if !exists {
+		return models.Post{}, errors.ErrPostIdNotFound
+	}
+
+	author, err := s.repo.CheckPostAuthor(postId)
+	if err != nil {
+		return models.Post{}, err
+	}
+
+	// public profile
+	is_public, err := s.repo.CheckProfileIsPublic(author)
+	if err != nil {
+		return models.Post{}, err
+	}
+
+	if !is_public && login != author {
+		// follows
+		friends, err := s.repo.ListFriends(author, 1000000, 0)
+		if err != nil {
+			return models.Post{}, err
+		}
+
+		if !isFriend(friends, login) {
+			return models.Post{}, errors.ErrAccessDenied
+		}
+	}
+
+	post, err := s.repo.LikePost(login, postId)
+	if err != nil {
+		return models.Post{}, err
+	}
+
+	return post, nil
+}
+
+func (s *Service) DislikePost(login string, postId uuid.UUID) (models.Post, error) {
+	// id exists
+	exists, err := s.repo.CheckPostIdExists(postId)
+	if err != nil {
+		return models.Post{}, err
+	}
+
+	if !exists {
+		return models.Post{}, errors.ErrPostIdNotFound
+	}
+
+	author, err := s.repo.CheckPostAuthor(postId)
+	if err != nil {
+		return models.Post{}, err
+	}
+
+	// public profile
+	is_public, err := s.repo.CheckProfileIsPublic(author)
+	if err != nil {
+		return models.Post{}, err
+	}
+
+	if !is_public && login != author {
+		// follows
+		friends, err := s.repo.ListFriends(author, 1000000, 0)
+		if err != nil {
+			return models.Post{}, err
+		}
+
+		if !isFriend(friends, login) {
+			return models.Post{}, errors.ErrAccessDenied
+		}
+	}
+
+	post, err := s.repo.DislikePost(login, postId)
+	if err != nil {
+		return models.Post{}, err
+	}
+
+	return post, nil
+}

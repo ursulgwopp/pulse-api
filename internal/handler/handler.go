@@ -29,6 +29,8 @@ type Service interface {
 	GetPost(login string, postId uuid.UUID) (models.Post, error)
 	ListMyPosts(login string, limit int, offset int) ([]models.Post, error)
 	ListPosts(userLogin string, login string, limit int, offset int) ([]models.Post, error)
+	LikePost(login string, postId uuid.UUID) (models.Post, error)
+	DislikePost(login string, postId uuid.UUID) (models.Post, error)
 }
 
 type Handler struct {
@@ -68,6 +70,8 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		api.GET("/posts/:postId", h.userIdentity, h.getPost)
 		api.GET("/posts/feed/my", h.userIdentity, h.listMyPosts)
 		api.GET("/posts/feed/:login", h.userIdentity, h.listPosts)
+		api.POST("/posts/:postId/like", h.userIdentity, h.likePost)
+		api.POST("/posts/:postId/dislike", h.userIdentity, h.dislikePost)
 	}
 
 	return router

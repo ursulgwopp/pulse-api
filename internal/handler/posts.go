@@ -51,13 +51,13 @@ func (h *Handler) getPost(c *gin.Context) {
 		return
 	}
 
-	postid, err := uuid.Parse(postIdParam)
+	postId, err := uuid.Parse(postIdParam)
 	if err != nil {
 		models.NewErrorResponse(c, http.StatusUnauthorized, errors.ErrPostIdNotFound.Error())
 		return
 	}
 
-	post, err := h.service.GetPost(login, postid)
+	post, err := h.service.GetPost(login, postId)
 	if err != nil {
 		if err == errors.ErrPostIdNotFound || err == errors.ErrAccessDenied {
 			models.NewErrorResponse(c, http.StatusNotFound, err.Error())
@@ -144,4 +144,70 @@ func (h *Handler) listPosts(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, posts)
+}
+
+func (h *Handler) likePost(c *gin.Context) {
+	login, err := getLogin(c)
+	if err != nil {
+		models.NewErrorResponse(c, http.StatusUnauthorized, err.Error())
+		return
+	}
+
+	postIdParam := c.Param("postId")
+	if postIdParam == "" {
+		models.NewErrorResponse(c, http.StatusUnauthorized, errors.ErrPostIdNotFound.Error())
+		return
+	}
+
+	postId, err := uuid.Parse(postIdParam)
+	if err != nil {
+		models.NewErrorResponse(c, http.StatusUnauthorized, errors.ErrPostIdNotFound.Error())
+		return
+	}
+
+	post, err := h.service.LikePost(login, postId)
+	if err != nil {
+		if err == errors.ErrAccessDenied || err == errors.ErrLoginDoesNotExist {
+			models.NewErrorResponse(c, http.StatusNotFound, err.Error())
+			return
+		}
+
+		models.NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, post)
+}
+
+func (h *Handler) dislikePost(c *gin.Context) {
+	login, err := getLogin(c)
+	if err != nil {
+		models.NewErrorResponse(c, http.StatusUnauthorized, err.Error())
+		return
+	}
+
+	postIdParam := c.Param("postId")
+	if postIdParam == "" {
+		models.NewErrorResponse(c, http.StatusUnauthorized, errors.ErrPostIdNotFound.Error())
+		return
+	}
+
+	postId, err := uuid.Parse(postIdParam)
+	if err != nil {
+		models.NewErrorResponse(c, http.StatusUnauthorized, errors.ErrPostIdNotFound.Error())
+		return
+	}
+
+	post, err := h.service.DislikePost(login, postId)
+	if err != nil {
+		if err == errors.ErrAccessDenied || err == errors.ErrLoginDoesNotExist {
+			models.NewErrorResponse(c, http.StatusNotFound, err.Error())
+			return
+		}
+
+		models.NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, post)
 }

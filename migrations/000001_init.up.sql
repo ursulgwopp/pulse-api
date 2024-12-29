@@ -33,8 +33,8 @@ CREATE TABLE posts (
   author TEXT NOT NULL REFERENCES users(login),
   tags TEXT[] DEFAULT '{}',
   created_at TIMESTAMP DEFAULT NOW(),
-  likes_count INTEGER[] DEFAULT '{}',
-  dislikes_count INTEGER[] DEFAULT '{}'
+  likes_count TEXT[] DEFAULT '{}',
+  dislikes_count TEXT[] DEFAULT '{}'
 );
 
 CREATE TABLE tokens (

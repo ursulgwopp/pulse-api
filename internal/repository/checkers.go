@@ -97,6 +97,19 @@ func (r *PostgresRepository) CheckPostIdExists(id uuid.UUID) (bool, error) {
 	return exists, nil
 }
 
+func (r *PostgresRepository) CheckPostAuthor(id uuid.UUID) (string, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), operationTimeout)
+	defer cancel()
+
+	var author string
+	query := `SELECT author FROM posts WHERE id = $1`
+	if err := r.db.QueryRowContext(ctx, query, id).Scan(&author); err != nil {
+		return "", err
+	}
+
+	return author, nil
+}
+
 // func (r *PostgresRepository) CheckUserIdExists(id int) (bool, error) {
 // 	ctx, cancel := context.WithTimeout(context.Background(), operationTimeout)
 // 	defer cancel()

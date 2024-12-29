@@ -78,3 +78,65 @@ func (r *PostgresRepository) ListPosts(login string, limit int, offset int) ([]m
 
 	return posts, nil
 }
+
+func (r *PostgresRepository) LikePost(login string, postId uuid.UUID) (models.Post, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), operationTimeout)
+	defer cancel()
+
+	// maybe should just check if reaction os applied, idk
+	query := `UPDATE posts SET likes_count = array_remove(likes_count, $1) WHERE id = $2`
+	_, err := r.db.ExecContext(ctx, query, login, postId)
+	if err != nil {
+		return models.Post{}, err
+	}
+
+	query = `UPDATE posts SET dislikes_count = array_remove(dislikes_count, $1) WHERE id = $2`
+	_, err = r.db.ExecContext(ctx, query, login, postId)
+	if err != nil {
+		return models.Post{}, err
+	}
+
+	query = `UPDATE posts SET likes_count = array_append(likes_count, $1) WHERE id = $2`
+	_, err = r.db.ExecContext(ctx, query, login, postId)
+	if err != nil {
+		return models.Post{}, err
+	}
+
+	post, err := r.GetPost(postId)
+	if err != nil {
+		return models.Post{}, err
+	}
+
+	return post, nil
+}
+
+func (r *PostgresRepository) DislikePost(login string, postId uuid.UUID) (models.Post, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), operationTimeout)
+	defer cancel()
+
+	// maybe should just check if reaction os applied, idk
+	query := `UPDATE posts SET likes_count = array_remove(likes_count, $1) WHERE id = $2`
+	_, err := r.db.ExecContext(ctx, query, login, postId)
+	if err != nil {
+		return models.Post{}, err
+	}
+
+	query = `UPDATE posts SET dislikes_count = array_remove(dislikes_count, $1) WHERE id = $2`
+	_, err = r.db.ExecContext(ctx, query, login, postId)
+	if err != nil {
+		return models.Post{}, err
+	}
+
+	query = `UPDATE posts SET dislikes_count = array_append(dislikes_count, $1) WHERE id = $2`
+	_, err = r.db.ExecContext(ctx, query, login, postId)
+	if err != nil {
+		return models.Post{}, err
+	}
+
+	post, err := r.GetPost(postId)
+	if err != nil {
+		return models.Post{}, err
+	}
+
+	return post, nil
+}

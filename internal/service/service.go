@@ -26,6 +26,8 @@ type Repository interface {
 	NewPost(login string, req models.NewPostRequest) (models.Post, error)
 	GetPost(postId uuid.UUID) (models.Post, error)
 	ListPosts(login string, limit int, offset int) ([]models.Post, error)
+	LikePost(login string, postId uuid.UUID) (models.Post, error)
+	DislikePost(login string, postId uuid.UUID) (models.Post, error)
 
 	CheckLoginExists(login string) (bool, error)
 	CheckCountryCodeExists(alpha2 string) (bool, error)
@@ -34,6 +36,7 @@ type Repository interface {
 	// CheckLoginByUserId(id int) (string, error)
 	CheckProfileIsPublic(login string) (bool, error)
 	CheckPostIdExists(id uuid.UUID) (bool, error)
+	CheckPostAuthor(id uuid.UUID) (string, error)
 	// CheckUserIdExists(id int) (bool, error)
 }
 
