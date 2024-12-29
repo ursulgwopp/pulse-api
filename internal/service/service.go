@@ -7,18 +7,20 @@ type Repository interface {
 	GetCountryByAlpha2(alpha2 string) (models.Country, error)
 
 	Register(req models.RegisterRequest) (models.UserProfile, error)
-	SignIn(req models.SignInRequest) (models.TokenClaims, error)
-	AddToken(id int, token string) error
+	SignIn(req models.SignInRequest) (string, error)
+	AddToken(login string, token string) error
 	ValidateToken(token string) error
-	KillTokens(id int) error
+	KillTokens(ilogin string) error
 
-	GetProfile(id int) (models.UserProfile, error)
-	UpdateProfile(id int, req models.UpdateProfileRequest) (models.UserProfile, error)
-	UpdatePassword(id int, req models.UpdatePasswordRequest) error
+	GetProfile(login string) (models.UserProfile, error)
+	UpdateProfile(login string, req models.UpdateProfileRequest) (models.UserProfile, error)
+	UpdatePassword(login string, req models.UpdatePasswordRequest) error
 
-	AddFriend(id int, login string) error
-	RemoveFriend(id int, login string) error
-	ListFriends(id int, limit int, offset int) ([]models.FriendInfo, error)
+	AddFriend(userLogin string, login string) error
+	RemoveFriend(userLogin string, login string) error
+	ListFriends(login string, limit int, offset int) ([]models.FriendInfo, error)
+
+	NewPost(login string, req models.NewPostRequest) (models.Post, error)
 
 	CheckLoginExists(login string) (bool, error)
 	CheckCountryCodeExists(alpha2 string) (bool, error)

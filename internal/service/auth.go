@@ -39,12 +39,10 @@ func (s *Service) Register(req models.RegisterRequest) (models.UserProfile, erro
 	return s.repo.Register(req)
 }
 
-// probably should completely remove tokenInfo struct, instead return id as int from repository layer
-// think on later
 func (s *Service) SignIn(req models.SignInRequest) (string, error) {
 	req.Password = generatePasswordHash(req.Password)
 
-	tokenClaims, err := s.repo.SignIn(req)
+	login, err := s.repo.SignIn(req)
 	if err != nil {
 		if err.Error() == "sql: no rows in result set" {
 			return "", errors.ErrInvalidUsernameOrPassword
@@ -58,7 +56,7 @@ func (s *Service) SignIn(req models.SignInRequest) (string, error) {
 			ExpiresAt: time.Now().Add(24 * time.Hour).Unix(),
 			IssuedAt:  time.Now().Unix(),
 		},
-		UserId: tokenClaims.UserId,
+		Login: login,
 	})
 
 	token, err := jwtToken.SignedString([]byte(os.Getenv("SECRET_KEY")))
@@ -66,7 +64,7 @@ func (s *Service) SignIn(req models.SignInRequest) (string, error) {
 		return "", err
 	}
 
-	if err := s.repo.AddToken(tokenClaims.UserId, token); err != nil {
+	if err := s.repo.AddToken(login, token); err != nil {
 		return "", err
 	}
 

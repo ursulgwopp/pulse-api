@@ -23,9 +23,12 @@ var (
 	ErrEmptyAuthHeader      = errors.New("empty auth header")
 	ErrInvalidSigningMethod = errors.New("invalid signing method")
 	ErrInvalidTokenClaims   = errors.New("token claims are not of type tokenClaims")
-	ErrUserIdNotFound       = errors.New("user id not found")
-	ErrInvalidIdType        = errors.New("invalid id type")
+	ErrLoginNotFound        = errors.New("login not found")
+	ErrInvalidLoginType     = errors.New("invalid login type")
 	ErrInvalidToken         = errors.New("invalid token")
+
+	ErrInvalidTag     = errors.New("invalid tag")
+	ErrInvalidContent = errors.New("invalid content")
 
 	ErrAccessDenied = errors.New("access denied")
 )

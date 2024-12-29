@@ -1,8 +1,10 @@
 DROP TABLE tokens;
 
-DROP TYPE friend_info;
+DROP TABLE posts;
 
 DROP TABLE friends;
+
+DROP TYPE friend_info;
 
 DROP TABLE users;
 

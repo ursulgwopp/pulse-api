@@ -5,7 +5,7 @@ import (
 	"github.com/ursulgwopp/pulse-api/internal/models"
 )
 
-func (s *Service) AddFriend(id int, login string) error {
+func (s *Service) AddFriend(userLogin string, login string) error {
 	exists, err := s.repo.CheckLoginExists(login)
 	if err != nil {
 		return err
@@ -15,10 +15,10 @@ func (s *Service) AddFriend(id int, login string) error {
 		return errors.ErrLoginDoesNotExist
 	}
 
-	return s.repo.AddFriend(id, login)
+	return s.repo.AddFriend(userLogin, login)
 }
 
-func (s *Service) RemoveFriend(id int, login string) error {
+func (s *Service) RemoveFriend(userLogin string, login string) error {
 	exists, err := s.repo.CheckLoginExists(login)
 	if err != nil {
 		return err
@@ -28,9 +28,9 @@ func (s *Service) RemoveFriend(id int, login string) error {
 		return errors.ErrLoginDoesNotExist
 	}
 
-	return s.repo.RemoveFriend(id, login)
+	return s.repo.RemoveFriend(userLogin, login)
 }
 
-func (s *Service) ListFriends(id int, limit int, offset int) ([]models.FriendInfo, error) {
-	return s.repo.ListFriends(id, limit, offset)
+func (s *Service) ListFriends(login string, limit int, offset int) ([]models.FriendInfo, error) {
+	return s.repo.ListFriends(login, limit, offset)
 }

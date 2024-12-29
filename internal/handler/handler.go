@@ -15,14 +15,16 @@ type Service interface {
 	SignIn(req models.SignInRequest) (string, error)
 	ValidateToken(token string) error
 
-	GetProfile(id int) (models.UserProfile, error)
-	UpdateProfile(id int, req models.UpdateProfileRequest) (models.UserProfile, error)
-	UpdatePassword(id int, req models.UpdatePasswordRequest) error
-	GetProfileByLogin(id int, login string) (models.UserProfile, error)
+	GetProfile(login string) (models.UserProfile, error)
+	UpdateProfile(login string, req models.UpdateProfileRequest) (models.UserProfile, error)
+	UpdatePassword(login string, req models.UpdatePasswordRequest) error
+	GetProfileByLogin(userLogin string, profileLogin string) (models.UserProfile, error)
 
-	AddFriend(id int, login string) error
-	RemoveFriend(id int, login string) error
-	ListFriends(id int, limit int, offset int) ([]models.FriendInfo, error)
+	AddFriend(userLogin string, login string) error
+	RemoveFriend(userLogin string, login string) error
+	ListFriends(login string, limit int, offset int) ([]models.FriendInfo, error)
+
+	NewPost(id int, req models.NewPostRequest) (models.Post, error)
 }
 
 type Handler struct {
@@ -58,7 +60,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		api.POST("/friends/remove", h.userIdentity, h.removeFriend)
 		api.GET("/friends", h.userIdentity, h.listFriends)
 
-		// api.POST("")
+		api.POST("/posts/new", h.userIdentity, h.newPost)
 	}
 
 	return router

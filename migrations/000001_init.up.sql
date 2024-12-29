@@ -23,12 +23,22 @@ CREATE TYPE friend_info AS (
 );
 
 CREATE TABLE friends (
-  user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+  login TEXT REFERENCES users(login) ON DELETE CASCADE,
   friends_info friend_info[] DEFAULT '{}'
 );
 
+CREATE TABLE posts (
+  id UUID PRIMARY KEY NOT NULL,
+  content TEXT NOT NULL,
+  author TEXT NOT NULL,
+  tags TEXT[] DEFAULT '{}',
+  created_at TIMESTAMP DEFAULT NOW(),
+  likes_count INTEGER[] DEFAULT '{}',
+  dislikes_count INTEGER[] DEFAULT '{}'
+);
+
 CREATE TABLE tokens (
-  user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+  login TEXT REFERENCES users(login) ON DELETE CASCADE,
   token TEXT NOT NULL,
   is_valid BOOLEAN NOT NULL
 );

@@ -9,15 +9,15 @@ import (
 )
 
 func (h *Handler) getProfile(c *gin.Context) {
-	id, err := getUserId(c)
+	login, err := getLogin(c)
 	if err != nil {
-		models.NewErrorResponse(c, http.StatusUnauthorized, errors.ErrEmptyAlpha2.Error())
+		models.NewErrorResponse(c, http.StatusUnauthorized, err.Error())
 		return
 	}
 
-	userProfile, err := h.service.GetProfile(id)
+	userProfile, err := h.service.GetProfile(login)
 	if err != nil {
-		models.NewErrorResponse(c, http.StatusInternalServerError, errors.ErrEmptyAlpha2.Error())
+		models.NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
 
@@ -25,7 +25,7 @@ func (h *Handler) getProfile(c *gin.Context) {
 }
 
 func (h *Handler) updateProfile(c *gin.Context) {
-	id, err := getUserId(c)
+	login, err := getLogin(c)
 	if err != nil {
 		models.NewErrorResponse(c, http.StatusUnauthorized, err.Error())
 		return
@@ -37,7 +37,7 @@ func (h *Handler) updateProfile(c *gin.Context) {
 		return
 	}
 
-	userProfile, err := h.service.UpdateProfile(id, req)
+	userProfile, err := h.service.UpdateProfile(login, req)
 	if err != nil {
 		if err == errors.ErrInvalidCountryCode ||
 			err == errors.ErrInvalidPhone ||
@@ -59,7 +59,7 @@ func (h *Handler) updateProfile(c *gin.Context) {
 }
 
 func (h *Handler) updatePassword(c *gin.Context) {
-	id, err := getUserId(c)
+	login, err := getLogin(c)
 	if err != nil {
 		models.NewErrorResponse(c, http.StatusUnauthorized, err.Error())
 		return
@@ -71,7 +71,7 @@ func (h *Handler) updatePassword(c *gin.Context) {
 		return
 	}
 
-	if err := h.service.UpdatePassword(id, req); err != nil {
+	if err := h.service.UpdatePassword(login, req); err != nil {
 		if err == errors.ErrInvalidPassword {
 			models.NewErrorResponse(c, http.StatusBadRequest, err.Error())
 			return
@@ -87,4 +87,32 @@ func (h *Handler) updatePassword(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, map[string]interface{}{"status": "ok"})
+}
+
+func (h *Handler) getProfileByLogin(c *gin.Context) {
+	userLogin, err := getLogin(c)
+	if err != nil {
+		models.NewErrorResponse(c, http.StatusUnauthorized, err.Error())
+		return
+	}
+
+	profileLogin := c.Param("login")
+	if profileLogin == "" {
+		models.NewErrorResponse(c, http.StatusBadRequest, errors.ErrInvalidLogin.Error())
+		return
+	}
+
+	userProfile, err := h.service.GetProfileByLogin(userLogin, profileLogin)
+	if err != nil {
+		if err == errors.ErrLoginDoesNotExist ||
+			err == errors.ErrAccessDenied {
+			models.NewErrorResponse(c, http.StatusForbidden, err.Error())
+			return
+		}
+
+		models.NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, userProfile)
 }

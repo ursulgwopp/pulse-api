@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/google/uuid"
 )
 
 type Country struct {
@@ -30,7 +31,7 @@ type SignInRequest struct {
 
 type TokenClaims struct {
 	jwt.StandardClaims
-	UserId int
+	Login string
 }
 
 type UserProfile struct {
@@ -61,4 +62,19 @@ type FriendInfo struct {
 
 type LoginRequest struct {
 	Login string `json:"login" binding:"required"`
+}
+
+type NewPostRequest struct {
+	Content string   `json:"content" binding:"required"`
+	Tags    []string `json:"tags" binding:"required"`
+}
+
+type Post struct {
+	Id            uuid.UUID `json:"id"`
+	Content       string    `json:"content"`
+	Author        string    `json:"author"`
+	Tags          []string  `json:"tags"`
+	CreatedAt     time.Time `json:"createdAt"`
+	LikesCount    int32     `json:"likesCount"`
+	DislikesCount int32     `json:"dislikesCount"`
 }

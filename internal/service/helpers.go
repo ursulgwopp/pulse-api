@@ -11,6 +11,10 @@ import (
 	"github.com/ursulgwopp/pulse-api/internal/models"
 )
 
+func isValidTag(tag string) bool {
+	return len(tag) <= 20
+}
+
 func isValidRegion(region string) bool {
 	validRegions := []string{"Asia", "Oceania", "Europe", "Africa", "Americas"}
 	return slices.Contains(validRegions, region)

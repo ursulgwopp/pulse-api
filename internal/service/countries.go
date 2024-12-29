@@ -8,18 +8,13 @@ import (
 )
 
 func (s *Service) ListCountries(regions []string) ([]models.Country, error) {
-	validRegions := []string{}
 	for _, region := range regions {
-		if isValidRegion(region) {
-			validRegions = append(validRegions, region)
+		if !isValidRegion(region) {
+			return []models.Country{}, errors.ErrInvalidRegion
 		}
 	}
 
-	if len(validRegions) == 0 {
-		return []models.Country{}, errors.ErrInvalidRegion
-	}
-
-	countries, err := s.repo.ListCountries(validRegions)
+	countries, err := s.repo.ListCountries(regions)
 	if err != nil {
 		return []models.Country{}, err
 	}

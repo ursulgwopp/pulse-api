@@ -10,7 +10,7 @@ import (
 )
 
 func (h *Handler) addFriend(c *gin.Context) {
-	id, err := getUserId(c)
+	login, err := getLogin(c)
 	if err != nil {
 		models.NewErrorResponse(c, http.StatusUnauthorized, err.Error())
 		return
@@ -22,7 +22,7 @@ func (h *Handler) addFriend(c *gin.Context) {
 		return
 	}
 
-	if err := h.service.AddFriend(id, req.Login); err != nil {
+	if err := h.service.AddFriend(login, req.Login); err != nil {
 		if err == errors.ErrLoginDoesNotExist {
 			models.NewErrorResponse(c, http.StatusNotFound, err.Error())
 			return
@@ -36,7 +36,7 @@ func (h *Handler) addFriend(c *gin.Context) {
 }
 
 func (h *Handler) removeFriend(c *gin.Context) {
-	id, err := getUserId(c)
+	login, err := getLogin(c)
 	if err != nil {
 		models.NewErrorResponse(c, http.StatusUnauthorized, err.Error())
 		return
@@ -48,7 +48,7 @@ func (h *Handler) removeFriend(c *gin.Context) {
 		return
 	}
 
-	if err := h.service.RemoveFriend(id, req.Login); err != nil {
+	if err := h.service.RemoveFriend(login, req.Login); err != nil {
 		if err == errors.ErrLoginDoesNotExist {
 			models.NewErrorResponse(c, http.StatusNotFound, err.Error())
 			return
@@ -62,7 +62,7 @@ func (h *Handler) removeFriend(c *gin.Context) {
 }
 
 func (h *Handler) listFriends(c *gin.Context) {
-	id, err := getUserId(c)
+	login, err := getLogin(c)
 	if err != nil {
 		models.NewErrorResponse(c, http.StatusUnauthorized, err.Error())
 		return
@@ -83,7 +83,7 @@ func (h *Handler) listFriends(c *gin.Context) {
 		return
 	}
 
-	friends, err := h.service.ListFriends(id, limit, offset)
+	friends, err := h.service.ListFriends(login, limit, offset)
 	if err != nil {
 		models.NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
