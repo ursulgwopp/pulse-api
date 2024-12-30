@@ -42,10 +42,21 @@ git clone https://github.com/ursulgwopp/pulse-api
 go mod tidy
 ```
 
-3. **Run the Application:**
+3. **Configure the application:**
+    - Configure `config.yaml` file in `config` directory.
+    - Create `.env` file in root directory as following:
+    ```
+    DB_PASSWORD=...
+    SECRET_KEY=...
+    SALT=...
+    ```
+
+4. **Run the Application:**
 ```bash
 make up && make run
 ```
+
+<!-- If you encounter any issues, feel free to open an issue in the repository! -->
 
 <!-- 4. **Access the API:**
 The API will be available at http://localhost:2024/swagger/index.html. -->
