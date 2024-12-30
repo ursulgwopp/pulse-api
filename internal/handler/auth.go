@@ -17,12 +17,9 @@ func (h *Handler) register(c *gin.Context) {
 
 	userProfile, err := h.service.Register(req)
 	if err != nil {
-		if err == errors.ErrInvalidLogin ||
-			err == errors.ErrInvalidEmail ||
-			err == errors.ErrInvalidPassword ||
-			err == errors.ErrInvalidCountryCode ||
-			err == errors.ErrInvalidPhone ||
-			err == errors.ErrInvalidImage {
+		if err == errors.ErrInvalidLogin || err == errors.ErrInvalidEmail ||
+			err == errors.ErrInvalidPassword || err == errors.ErrInvalidCountryCode ||
+			err == errors.ErrInvalidPhone || err == errors.ErrInvalidImage {
 			models.NewErrorResponse(c, http.StatusBadRequest, err.Error())
 			return
 		}

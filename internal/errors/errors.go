@@ -7,7 +7,6 @@ var (
 	ErrEmptyAlpha2     = errors.New("empty alpha2 code")
 	ErrCountryNotFound = errors.New("country not found")
 
-	// ErrInvalidRegisterRequest    = errors.New("invalid register request")
 	ErrInvalidLogin              = errors.New("invalid login")
 	ErrInvalidEmail              = errors.New("invalid email")
 	ErrInvalidPassword           = errors.New("invalid password")
@@ -15,6 +14,7 @@ var (
 	ErrInvalidPhone              = errors.New("invalid phone")
 	ErrInvalidImage              = errors.New("invalid image")
 	ErrLoginExists               = errors.New("login exists")
+	ErrEmailExists               = errors.New("email exists")
 	ErrPhoneExists               = errors.New("phone exists")
 	ErrInvalidUsernameOrPassword = errors.New("invalid username or password")
 	ErrInvalidOldPassword        = errors.New("invalid old password")

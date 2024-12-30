@@ -16,6 +16,7 @@ func (r *PostgresRepository) AddFriend(userLogin string, login string) error {
 	}
 
 	var exists bool
+
 	query := `SELECT EXISTS (SELECT 1 FROM friends WHERE login = $1 AND EXISTS (SELECT 1 FROM UNNEST(friends_info) AS fi WHERE fi.login = $2))`
 	if err := r.db.QueryRowContext(ctx, query, userLogin, login).Scan(&exists); err != nil {
 		return err
@@ -46,7 +47,7 @@ func (r *PostgresRepository) ListFriends(login string, limit int, offset int) ([
 	defer cancel()
 
 	var friends []models.FriendInfo
-	// query := `SELECT (UNNEST(friends_info)).* FROM friends WHERE user_id = $1`
+
 	query := `WITH unnested_friends AS (SELECT (UNNEST(friends_info)).* AS friend_info FROM friends WHERE login = $1) SELECT * FROM unnested_friends LIMIT $2 OFFSET $3`
 	rows, err := r.db.QueryContext(ctx, query, login, limit, offset)
 	if err != nil {

@@ -4,7 +4,7 @@ Welcome to **Pulse**, a dynamic social network where users can create their own 
 
 This application was developed as part of the technical challenge for the PROD '23 contest. For more details, you can find the task description and the OpenAPI specification in the `docs` directory.
 
-## Topics covered
+## Topics Covered
 
 - **Authorization and Authentication**: Securely register and log in to user accounts.
 
@@ -13,6 +13,8 @@ This application was developed as part of the technical challenge for the PROD '
 - **JSON Responses**: Receive data in a standardized JSON format for easy parsing.
 
 - **Makefile**: Automate tasks and manage builds efficiently. 
+
+- **Documentation**: ...
 
 - **Database Migrations**: Manage schema changes with simple commands like `make up` and `make down`.
 
@@ -24,7 +26,7 @@ This application was developed as part of the technical challenge for the PROD '
 
 - **PostgreSQL**: A relational database for data storage.
 
-<!-- - **Swagger**: API documentation for easy reference. -->
+- **Swagger**: API documentation for easy reference.
 
 - **JWT**: For authorization and authentication.
 
@@ -33,38 +35,43 @@ This application was developed as part of the technical challenge for the PROD '
 Follow these steps to run the application locally:
 
 1. **Clone the Repository**:
-```bash
-git clone https://github.com/ursulgwopp/pulse-api
-```
+    ```
+    git clone https://github.com/ursulgwopp/pulse-api
+    ```
 
 2. **Install Required Go Packages:**
-```bash
-go mod tidy
-```
+    ```bash
+    go mod tidy
+    ```
 
 3. **Configure the application:**
-    - Configure `config.yaml` file in `config` directory.
-    - Create `.env` file in root directory as following:
-    ```
-    DB_PASSWORD=...
-    SECRET_KEY=...
-    SALT=...
-    ```
+    - Configure `config.yaml` file in `configs` directory.
+    - Create `.env` file in root directory and set environment variables as following:
+
+        ```
+        DB_PASSWORD=...
+        SECRET_KEY=...
+        SALT=...
+        ```
 
 4. **Run the Application:**
-```bash
-make up && make run
-```
+    ```bash
+    make up && make run
+    ```
+
+5. **Access the API:**
+The API will be available at http://localhost:8080/swagger.
 
 <!-- If you encounter any issues, feel free to open an issue in the repository! -->
 
-<!-- 4. **Access the API:**
-The API will be available at http://localhost:2024/swagger/index.html. -->
-
 ## TODO
-- Make code cleaner
+- Work on business logic of /posts
 
 - Add TXs to repository layer
+
+- Fix bun in filtration countries by region: if region == nil do not err (DONE)
+
+- Make email field unique (DONE)
 
 ## Contributing
 

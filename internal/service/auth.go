@@ -14,7 +14,7 @@ func (s *Service) Register(req models.RegisterRequest) (models.UserProfile, erro
 		return models.UserProfile{}, err
 	}
 
-	if err := validateEmail(req.Email); err != nil {
+	if err := validateEmail(s, req.Email); err != nil {
 		return models.UserProfile{}, err
 	}
 

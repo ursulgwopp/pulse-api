@@ -12,6 +12,7 @@ func (r *PostgresRepository) Register(req models.RegisterRequest) (models.UserPr
 	defer cancel()
 
 	var userProfile models.UserProfile
+
 	query := `INSERT INTO users (login, email, hash_password, country_code, is_public, phone, image) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING login, email, country_code, is_public, phone, image`
 	if err := r.db.QueryRowContext(ctx, query, req.Login, req.Email, req.Password, req.CountryCode, req.IsPublic, req.Phone, req.Image).Scan(&userProfile.Login, &userProfile.Email, &userProfile.CountryCode, &userProfile.IsPublic, &userProfile.Phone, &userProfile.Image); err != nil {
 		return models.UserProfile{}, err
@@ -31,6 +32,7 @@ func (r *PostgresRepository) SignIn(req models.SignInRequest) (string, error) {
 	defer cancel()
 
 	var exists bool
+
 	query := `SELECT EXISTS (SELECT 1 FROM users WHERE login = $1 AND hash_password = $2)`
 	if err := r.db.QueryRowContext(ctx, query, req.Login, req.Password).Scan(&exists); err != nil {
 		return "", err
@@ -61,6 +63,7 @@ func (r *PostgresRepository) ValidateToken(token string) error {
 	defer cancel()
 
 	var is_valid bool
+
 	query := `SELECT is_valid FROM tokens WHERE token = $1`
 	if err := r.db.QueryRowContext(ctx, query, token).Scan(&is_valid); err != nil {
 		return err

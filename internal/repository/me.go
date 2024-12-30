@@ -65,6 +65,7 @@ func (r *PostgresRepository) UpdatePassword(login string, req models.UpdatePassw
 	defer cancel()
 
 	var oldPassword string
+
 	query := `SELECT hash_password FROM users WHERE login = $1`
 	if err := r.db.QueryRowContext(ctx, query, login).Scan(&oldPassword); err != nil {
 		return err

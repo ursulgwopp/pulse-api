@@ -58,13 +58,22 @@ func validateLogin(s *Service, login string) error {
 	return nil
 }
 
-func validateEmail(email string) error {
+func validateEmail(s *Service, email string) error {
 	if len(email) < 1 || len(email) > 50 {
 		return errors.ErrInvalidEmail
 	}
 
 	if matched, _ := regexp.MatchString(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`, email); !matched {
 		return errors.ErrInvalidEmail
+	}
+
+	exists, err := s.repo.CheckEmailExists(email)
+	if err != nil {
+		return err
+	}
+
+	if exists {
+		return errors.ErrEmailExists
 	}
 
 	return nil
@@ -91,6 +100,10 @@ func validatePassword(password string) error {
 }
 
 func validateCountryCode(s *Service, alpha2 string) error {
+	if len(alpha2) > 2 {
+		return errors.ErrInvalidCountryCode
+	}
+
 	exists, err := s.repo.CheckCountryCodeExists(alpha2)
 	if err != nil {
 		return err
@@ -108,6 +121,10 @@ func validatePhone(s *Service, phone string) error {
 		return nil
 	}
 
+	if len(phone) > 20 {
+		return errors.ErrInvalidPhone
+	}
+
 	exists, err := s.repo.CheckPhoneExists(phone)
 	if err != nil {
 		return err
@@ -117,11 +134,7 @@ func validatePhone(s *Service, phone string) error {
 		return errors.ErrPhoneExists
 	}
 
-	if len(phone) > 20 {
-		return errors.ErrInvalidPhone
-	}
-
-	if matched, _ := regexp.MatchString(`^\+?[1-9]\d{0,2}[-.\s]?(\(?\d{1,4}?\)?[-.\s]?)?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$`, phone); !matched {
+	if matched, _ := regexp.MatchString(`\+[\d]+`, phone); !matched {
 		return errors.ErrInvalidPhone
 	}
 
@@ -133,8 +146,16 @@ func validateImage(image string) error {
 		return nil
 	}
 
-	if len(image) > 200 {
+	if len(image) < 1 || len(image) > 200 {
 		return errors.ErrInvalidImage
+	}
+
+	return nil
+}
+
+func validateContent(content string) error {
+	if len(content) > 1000 {
+		return errors.ErrInvalidContent
 	}
 
 	return nil

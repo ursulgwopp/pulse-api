@@ -7,14 +7,14 @@ import (
 )
 
 func (s *Service) NewPost(login string, req models.NewPostRequest) (models.Post, error) {
+	if err := validateContent(req.Content); err != nil {
+		return models.Post{}, err
+	}
+
 	for _, tag := range req.Tags {
 		if !isValidTag(tag) {
 			return models.Post{}, errors.ErrInvalidTag
 		}
-	}
-
-	if len(req.Content) > 1000 {
-		return models.Post{}, errors.ErrInvalidContent
 	}
 
 	return s.repo.NewPost(login, req)

@@ -13,7 +13,7 @@ type Repository interface {
 	SignIn(req models.SignInRequest) (string, error)
 	AddToken(login string, token string) error
 	ValidateToken(token string) error
-	KillTokens(ilogin string) error
+	KillTokens(login string) error
 
 	GetProfile(login string) (models.UserProfile, error)
 	UpdateProfile(login string, req models.UpdateProfileRequest) (models.UserProfile, error)
@@ -30,6 +30,7 @@ type Repository interface {
 	DislikePost(login string, postId uuid.UUID) (models.Post, error)
 
 	CheckLoginExists(login string) (bool, error)
+	CheckEmailExists(email string) (bool, error)
 	CheckCountryCodeExists(alpha2 string) (bool, error)
 	CheckPhoneExists(phone string) (bool, error)
 	// CheckUserIdByLogin(login string) (int, error)

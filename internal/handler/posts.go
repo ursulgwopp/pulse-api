@@ -25,8 +25,7 @@ func (h *Handler) newPost(c *gin.Context) {
 
 	post, err := h.service.NewPost(login, req)
 	if err != nil {
-		if err == errors.ErrInvalidTag ||
-			err == errors.ErrInvalidContent {
+		if err == errors.ErrInvalidTag || err == errors.ErrInvalidContent {
 			models.NewErrorResponse(c, http.StatusBadRequest, err.Error())
 			return
 		}
@@ -35,7 +34,7 @@ func (h *Handler) newPost(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, post)
+	c.JSON(http.StatusOK, post)
 }
 
 func (h *Handler) getPost(c *gin.Context) {
@@ -47,13 +46,13 @@ func (h *Handler) getPost(c *gin.Context) {
 
 	postIdParam := c.Param("postId")
 	if postIdParam == "" {
-		models.NewErrorResponse(c, http.StatusUnauthorized, errors.ErrPostIdNotFound.Error())
+		models.NewErrorResponse(c, http.StatusNotFound, errors.ErrPostIdNotFound.Error())
 		return
 	}
 
 	postId, err := uuid.Parse(postIdParam)
 	if err != nil {
-		models.NewErrorResponse(c, http.StatusUnauthorized, errors.ErrPostIdNotFound.Error())
+		models.NewErrorResponse(c, http.StatusNotFound, errors.ErrPostIdNotFound.Error())
 		return
 	}
 
@@ -92,6 +91,11 @@ func (h *Handler) listMyPosts(c *gin.Context) {
 
 	posts, err := h.service.ListMyPosts(login, limit, offset)
 	if err != nil {
+		if err == errors.ErrInvalidPaginationParams {
+			models.NewErrorResponse(c, http.StatusBadRequest, err.Error())
+			return
+		}
+
 		models.NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}

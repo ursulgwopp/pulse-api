@@ -104,8 +104,7 @@ func (h *Handler) getProfileByLogin(c *gin.Context) {
 
 	userProfile, err := h.service.GetProfileByLogin(userLogin, profileLogin)
 	if err != nil {
-		if err == errors.ErrLoginDoesNotExist ||
-			err == errors.ErrAccessDenied {
+		if err == errors.ErrLoginDoesNotExist || err == errors.ErrAccessDenied {
 			models.NewErrorResponse(c, http.StatusForbidden, err.Error())
 			return
 		}
